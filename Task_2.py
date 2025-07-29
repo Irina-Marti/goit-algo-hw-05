@@ -1,19 +1,15 @@
-import re
-from typing import Callable, Generator
+from typing import Callable
+"""
+Function that loops through words in a text and tries to generate them in a float format
+"""
+def generator_numbers(text: str):
+    for word in text.split():
+        try:
+            yield float(word)    #if yes, return number, no - continue
+        except ValueError:
+            continue
 
-def generator_numbers(text: str) -> Generator[float, None, None]:
-    """
-    Generator function that yields numbers from a string that are separated
-    by spaces on both sides and returns them
-    """
-    pattern = r'(?<=\s)\d+(?:\.\d+)?(?=\s)'  #pattern to search numbers real numbers (including decimal) with spaces on both sides
-    for match in re.finditer(pattern, f' {text} '):
-        yield float(match.group())
-
-def sum_profit(text: str, func: Callable) -> float:
-    """
-    Returns the sum of the real numbers from the text
-    """
+def sum_profit(text: str, func: Callable):
     return sum(func(text))
 
 text = "Загальний дохід працівника складається з декількох частин: 1000.01 як основний дохід, доповнений додатковими надходженнями 27.45 і 324.00 доларів."

@@ -1,44 +1,23 @@
 #Decorator for add_contact
-def inner_error_add(func):
+def inner_error(func):
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
         except ValueError:
             return 'Give me name and phone please'
         except IndexError:
-            return 'Enter user name'
-    return inner
-
-#Decorator for change_contact
-def inner_error_change(func):
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except ValueError:
-            return 'Give me name and phone please'
-        except IndexError:
-            return 'Enter user name'
+            return 'Enter correct user name'
         except KeyError:
             return 'Contact not found'
     return inner
 
-#Decorator for show_contact
-def inner_error_show(func):
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except KeyError:
-            return 'Contact not found'
-        except IndexError:
-            return'Enter user name'
-    return inner
-
+@inner_error
 def parse_input(user_input):
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
     return cmd, *args
 
-@inner_error_add
+@inner_error
 def add_contact(args, contacts):
     if len(args) < 2:
         return "Please enter both name and phone number"
@@ -49,7 +28,7 @@ def add_contact(args, contacts):
     else:
         return f"The contact {name} already exists. Please enter a new name."
 
-@inner_error_change
+@inner_error
 def change_contact(args, contacts):
     name, new_phone = args
     if name in contacts:
@@ -58,7 +37,7 @@ def change_contact(args, contacts):
     else:
         return f"Contact {name} not found."
 
-@inner_error_show
+@inner_error
 def show_phone(args, contacts):
     if not args:
         return "The list is empty. Please add names to it."
