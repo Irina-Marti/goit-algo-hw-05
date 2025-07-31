@@ -6,8 +6,10 @@ def inner_error(func):
         except ValueError:
             return 'Give me name and phone please'
         except IndexError:
-            return 'Enter correct user name'
-        except KeyError:
+            return 'Not enough arguments'
+        except KeyError as e:
+            if str(e) == "'Contact already exists'":
+                return 'This contact already exists. Please add a new name.'
             return 'Contact not found'
     return inner
 
@@ -20,32 +22,34 @@ def parse_input(user_input):
 @inner_error
 def add_contact(args, contacts):
     if len(args) < 2:
-        return "Please enter both name and phone number"
+        raise IndexError('Not enough arguments')
     name, phone = args
-    if name not in contacts:
-        contacts[name] = phone
-        return f"The contact {name} added successfully"
-    else:
-        return f"The contact {name} already exists. Please enter a new name."
+    if name in contacts:
+        raise KeyError("Contact already exists")
+    contacts[name] = phone
+    return f"The contact {name} added successfully"
+    #else:
+        #return f"The contact {name} already exists. Please enter a new name."
 
 @inner_error
 def change_contact(args, contacts):
     name, new_phone = args
-    if name in contacts:
-        contacts[name] = new_phone
-        return f"Phone number for {name} was changed."
-    else:
-        return f"Contact {name} not found."
+    if name not in contacts:
+        raise KeyError("Contact not found")
+    contacts[name] = new_phone
+    return f"Phone number for {name} was changed."
+    #else:
+       # return f"Contact {name} not found."
 
 @inner_error
 def show_phone(args, contacts):
-    if not args:
-        return "The list is empty. Please add names to it."
+    #if not args:
+        #return "The list is empty. Please add names to it."
     name = args [0]
-    if name in contacts:
-        return f"{name}: {contacts[name]}"
-    else:
-        return f"Contact {name} not found."
+    #if name in contacts:
+    return f"{name}: {contacts[name]}"
+    #else:
+        #return f"Contact {name} not found."
 
 def show_all(contacts):
     if not contacts:

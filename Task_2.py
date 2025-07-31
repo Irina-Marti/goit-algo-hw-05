@@ -3,7 +3,7 @@ from typing import Callable
 Function that loops through words in a text and tries to generate them in a float format
 """
 def generator_numbers(text: str):
-    for word in text.split():
+    for word in text.split()[1:-1]:
         try:
             yield float(word)    #if yes, return number, no - continue
         except ValueError:
